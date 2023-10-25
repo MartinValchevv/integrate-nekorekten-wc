@@ -5,7 +5,7 @@
  * Description: Integrate nekorekten.com for WooCommerce is a plugin that helps to check your customers - whether there are negative reviews about them in the nekorekten.com system, as well as you can report incorrect customers. Everything is done to facilitate the check in the order, also there is an option to receive directly in the email about a new order, if there are negative reviews.
  * Author: Martin Valchev
  * Author URI: https://martinvalchev.com/
- * Version: 1.0
+ * Version: 1.1
  * Text Domain: integrate-nekorekten-wc
  * Domain Path: /languages
  * License: GPL v2 - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
