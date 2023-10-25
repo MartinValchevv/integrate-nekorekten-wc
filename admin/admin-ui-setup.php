@@ -11,7 +11,7 @@ if ( ! defined('ABSPATH') ) exit;
 /**
  * Enqueue Admin CSS and JS
  *
- * @since 1.0
+ * @since 1.1
  */
 function inwc_enqueue_css_js( $hook ) {
 
@@ -33,6 +33,7 @@ function inwc_enqueue_css_js( $hook ) {
     wp_enqueue_script( 'sweetalert2', INWC_URL . 'includes/sweetalert2/sweetalert2.all.min.js', __FILE__ );
     wp_enqueue_script('intl-tel-input', INWC_URL . 'includes/intl-tel-input/build/js/intlTelInput-jquery.min.js', array('jquery'), '18.2.1', true);
     wp_enqueue_script('intl-tel-input-utils', INWC_URL . 'includes/intl-tel-input/build/js/utils.js', array('jquery', 'intl-tel-input'), '18.2.1', true);
+    wp_enqueue_script('jquery-ui-dialog');
     // CSS
     wp_enqueue_style('inwc-admin-css', INWC_URL . 'includes/css/admin/admin.css', '', INWC_VERSION_NUM);
     wp_enqueue_style('inwc_fontawesome', INWC_URL . 'includes/fontawesome5/css/all.css', '', INWC_VERSION_NUM);
@@ -41,13 +42,14 @@ function inwc_enqueue_css_js( $hook ) {
     /**
      * Translate array for JS inwc-admin
      *
-     * @since 1.0
+     * @since 1.1
      */
     $translation_array = array(
         'required' => __( 'This field is required', 'integrate-nekorekten-wc' ),
         'oops' => __( 'Oops..', 'integrate-nekorekten-wc' ),
         'validateFB_URL' => __( 'Must contain a valid Facebook URL', 'integrate-nekorekten-wc' ),
         'validateWebsite_URL' => __( 'Must contain a valid url (https:// or http://)', 'integrate-nekorekten-wc' ),
+        'ip_copied' => __( 'IPv4 Address copied to clipboard.', 'integrate-nekorekten-wc' ),
     );
     wp_localize_script( 'inwc-admin', 'translate_obj', $translation_array );
 
@@ -222,7 +224,7 @@ function inwc_register_settings() {
 
 /**
  * Settings section
- * @since 1.0
+ * @since 1.1
  */
 function inwc_settings_section_callback() {
 
@@ -245,7 +247,15 @@ function inwc_settings_turn_on_callback() {
 
 function inwc_settings_API_key_callback() {
     $option = get_option( 'inwc_settings_group' );
+    $server_ipv4 = inwc_get_server_ipv4();
+    $localhost_checker = gethostbyname($_SERVER['SERVER_NAME']);
     ?>
+    <?php if ($localhost_checker == '127.0.0.1') : ?>
+        <p style="font-size: 12px; color: #d09e35;"><?php echo esc_html__('Uses the local server plugin, it is recommended to use your public IP address for API key configuration in nekorekten.com. You can check your public ip address' , 'integrate-nekorekten-wc') ?> <a href="https://www.ipaddress.my/" target="_blank"><?php echo esc_html__('here' , 'integrate-nekorekten-wc') ?></a>.</p>
+    <?php else: ?>
+        <p style="font-size: 12px;"><?php echo esc_html__('Server IPv4 Address:' , 'integrate-nekorekten-wc') ?> <code id="inwc_server_ip" style="cursor: pointer;"><?php echo esc_attr($server_ipv4); ?></code> <span><?php echo esc_html__('( use for API key configuration at nekorekten.com )' , 'integrate-nekorekten-wc') ?></span></p>
+        <div id="inwc_clipboard-alert" style="display: none;"></div>
+    <?php endif; ?>
     <input type="text" id="inwc_settings_API_key" name="inwc_settings_API_key" value="<?php echo esc_attr($option['inwc_settings_API_key']) ?>" />
     <?php
 }
@@ -269,6 +279,13 @@ function inwc_settings_show_in_admin_email_callback() {
 add_action( 'admin_init', 'inwc_register_settings' );
 add_action( 'woocommerce_settings_tabs_inwc_tab', 'inwc_custom_settings' );
 
-
+/**
+ * Function return Server IPv4 Address
+ * @since 1.1
+ */
+function inwc_get_server_ipv4() {
+    $server_ip = gethostbyname(gethostname());
+    return $server_ip;
+}
 
 

@@ -47,7 +47,7 @@ if (isset($option['inwc_settings_turn_on']) && $option['inwc_settings_turn_on'] 
     /**
      * Render content for the Signals from nekorekten.com meta box
      *
-     * @since 1.0
+     * @since 1.1
      */
     function inwc_render_signals_meta_box($post)
     {
@@ -363,7 +363,19 @@ if (isset($option['inwc_settings_turn_on']) && $option['inwc_settings_turn_on'] 
 
             <?php
         } else {
-            echo '<p style="margin-top: 0; padding: 20px 0 8px 0;">' . esc_html__('Unable to retrieve data from nekorekten.com API, check if you have configured the correct API key or wait a few minutes because you may be doing 5 requests per minute', 'integrate-nekorekten-wc') . '</p>';
+            $data_phone = json_decode(wp_remote_retrieve_body($responsePhone));
+            $data_email = json_decode(wp_remote_retrieve_body($responseEmail));
+
+            if (isset($data_phone->message) || isset($data_email->message)) {
+                if ($data_phone->message == $data_email->message) {
+                    echo '<p style="margin-top: 0; padding: 20px 0 8px 0; color: red;">' . esc_html($data_phone->message) . '</p>';
+                } else {
+                    echo '<p style="margin-top: 0; padding: 20px 0 8px 0; color: red;">' . esc_html($data_phone->message) . '</p>';
+                    echo '<p style="margin-top: 0; padding: 20px 0 8px 0; color: red;">' . esc_html($data_email->message) . '</p>';
+                }
+            } else {
+                 echo '<p style="margin-top: 0; padding: 20px 0 8px 0; color: red;">' . esc_html__('Unable to retrieve data from nekorekten.com API, check if you have configured the correct API key or wait a few minutes because you may be doing 5 requests per minute', 'integrate-nekorekten-wc') . '</p>';
+            }
 
         }
     }

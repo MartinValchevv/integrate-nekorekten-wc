@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  *
  * @since 1.0
  */
-if ( ! defined( 'INWC_VERSION_NUM' ) ) 		    define( 'INWC_VERSION_NUM'		    , '1.0' ); // Plugin version constant
+if ( ! defined( 'INWC_VERSION_NUM' ) ) 		    define( 'INWC_VERSION_NUM'		    , '1.1' ); // Plugin version constant
 if ( ! defined( 'INWC_PLUGIN' ) )		define( 'INWC_PLUGIN'		, trim( dirname( plugin_basename( __FILE__ ) ), '/' ) ); // Name of the plugin folder eg - 'integrate-nekorekten-wc'
 if ( ! defined( 'INWC_DIR' ) )	define( 'INWC_DIR'	, plugin_dir_path( __FILE__ ) ); // Plugin directory absolute path with the trailing slash. Useful for using with includes eg - /var/www/html/wp-content/plugins/integrate-nekorekten-wc/
 if ( ! defined( 'INWC_URL' ) )	define( 'INWC_URL'	, plugin_dir_url( __FILE__ ) ); // URL to the plugin folder with the trailing slash. Useful for referencing src eg - http://localhost/wp/wp-content/plugins/integrate-nekorekten-wc/

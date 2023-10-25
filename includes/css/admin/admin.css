@@ -416,6 +416,14 @@
 
 /*END Switch button Checkbox */
 
+.inwc-dialog-class {
+    background: #00a32a !important;
+    border: none !important;
+}
+
+#inwc_clipboard-alert {
+    color: #fff;
+}
 
 @media only screen and (max-width: 1200px){
     #signals_meta_box .signal-wrapper {

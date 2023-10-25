@@ -1,11 +1,11 @@
 === Integrate nekorekten.com for WooCommerce ===
 Contributors: martinvalchev
 Donate link: https://revolut.me/mvalchev
-Tags: Integrate nekorekten.com, nekorekten.com, orders, woocommerce, order verification, negative reviews, customer check, report review
+Tags: integrate, orders, woocommerce, reviews, customer, report, order verification, negative reviews, customer check, report review, nekorekten.com
 Requires at least: 5.3
-Tested up to: 6.2.2
+Tested up to: 6.3.2
 Requires PHP: 7.4
-Stable tag: 1.0
+Stable tag: 1.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -69,10 +69,18 @@ Definitely!
 
 == Changelog ==
 
+= 1.1 =
+* Added function to show server ip with direct copy option to use for API key configuration in nekorekten.com
+* Fix of errors when retrieving data of signals in the order
+
 = 1.0 =
 * First release of the plugin.
 
 == Upgrade Notice ==
+
+= 1.1 =
+* Added function to show server ip with direct copy option to use for API key configuration in nekorekten.com
+* Fix of errors when retrieving data of signals in the order
 
 = 1.0 =
 * First release of the plugin.

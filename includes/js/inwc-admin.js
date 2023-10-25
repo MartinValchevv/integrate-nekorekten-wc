@@ -159,4 +159,37 @@ jQuery(document).ready(function($) {
     // Trigger the change event on page load to set the initial state
     $("#inwc_settings_turn_on").trigger("change");
 
+
+    /** @since 1.1 function for copy server IP  */
+    $("#inwc_server_ip").click(function() {
+        var serverIp = $("#inwc_server_ip").text();
+        inwc_copyToClipboard(serverIp);
+    });
+    function inwc_copyToClipboard(text) {
+        var $temp = $("<input>");
+        $("body").append($temp);
+        $temp.val(text).select();
+        document.execCommand("copy");
+        $temp.remove();
+
+        var dialog = $("#inwc_clipboard-alert");
+        dialog.html(translate_obj.ip_copied);
+        dialog.dialog({
+            autoOpen: true,
+            draggable: false,
+            resizable: false,
+            modal: false,
+            title: false,
+            closeOnEscape: false,
+            minHeight: "auto",
+            dialogClass: "inwc-dialog-class"
+        });
+
+        dialog.closest('.ui-dialog').find('.ui-dialog-titlebar').hide();
+
+        setTimeout(function() {
+            dialog.dialog("close");
+        }, 1500);
+    }
+
 });
