@@ -3,7 +3,7 @@ Contributors: martinvalchev
 Donate link: https://revolut.me/mvalchev
 Tags: integrate, orders, woocommerce, reviews, customer, report, order verification, negative reviews, customer check, report review, nekorekten.com
 Requires at least: 5.3
-Tested up to: 6.3.2
+Tested up to: 6.4
 Requires PHP: 7.4
 Stable tag: 1.1
 License: GPLv2 or later
