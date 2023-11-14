@@ -108,8 +108,6 @@ jQuery(document).ready(function($) {
             },
             success: function(response) {
 
-                console.log(response)
-
                 if (response.success) {
                     $('#signals_meta_box #report-overlay').fadeOut();
                     $('#signals_meta_box #report-popup').fadeOut(200);

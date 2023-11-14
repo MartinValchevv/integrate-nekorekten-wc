@@ -5,7 +5,7 @@ Tags: integrate, orders, woocommerce, reviews, customer, report, order verificat
 Requires at least: 5.3
 Tested up to: 6.4
 Requires PHP: 7.4
-Stable tag: 1.2
+Stable tag: 1.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -26,7 +26,7 @@ The options for this plugin include:
 The helper libraries plugin uses the following:
 
 *   [FontAwesome v5](https://fontawesome.com/)
-*   [SweetAlert2 v11.7.10](https://sweetalert2.github.io/)
+*   [SweetAlert2 v11.4.8](https://sweetalert2.github.io/)
 *   [International Telephone Input](https://intl-tel-input.com/)
 *   [nekorekten.com API](https://nekorekten.com/bg/api/doc)
 *   [REST Countries API](https://restcountries.com/)
@@ -68,6 +68,9 @@ Definitely!
 4. Report signal
 
 == Changelog ==
+
+= 1.3 =
+* Changed version SweetAlert2 to v11.4.8
 
 = 1.2 =
 * Changed version SweetAlert to v11.7.10
