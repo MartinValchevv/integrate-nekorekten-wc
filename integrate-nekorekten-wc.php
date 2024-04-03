@@ -5,7 +5,8 @@
  * Description: Integrate nekorekten.com for WooCommerce is a plugin that helps to check your customers - whether there are negative reviews about them in the nekorekten.com system, as well as you can report incorrect customers. Everything is done to facilitate the check in the order, also there is an option to receive directly in the email about a new order, if there are negative reviews.
  * Author: Martin Valchev
  * Author URI: https://martinvalchev.com/
- * Version: 1.3
+ * Requires Plugins: woocommerce
+ * Version: 1.4
  * Text Domain: integrate-nekorekten-wc
  * Domain Path: /languages
  * License: GPL v2 - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
@@ -20,7 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  *
  * @since 1.0
  */
-if ( ! defined( 'INWC_VERSION_NUM' ) ) 		    define( 'INWC_VERSION_NUM'		    , '1.3' ); // Plugin version constant
+if ( ! defined( 'INWC_VERSION_NUM' ) ) 		    define( 'INWC_VERSION_NUM'		    , '1.4' ); // Plugin version constant
 if ( ! defined( 'INWC_PLUGIN' ) )		define( 'INWC_PLUGIN'		, trim( dirname( plugin_basename( __FILE__ ) ), '/' ) ); // Name of the plugin folder eg - 'integrate-nekorekten-wc'
 if ( ! defined( 'INWC_DIR' ) )	define( 'INWC_DIR'	, plugin_dir_path( __FILE__ ) ); // Plugin directory absolute path with the trailing slash. Useful for using with includes eg - /var/www/html/wp-content/plugins/integrate-nekorekten-wc/
 if ( ! defined( 'INWC_URL' ) )	define( 'INWC_URL'	, plugin_dir_url( __FILE__ ) ); // URL to the plugin folder with the trailing slash. Useful for referencing src eg - http://localhost/wp/wp-content/plugins/integrate-nekorekten-wc/

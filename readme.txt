@@ -3,9 +3,9 @@ Contributors: martinvalchev
 Donate link: https://revolut.me/mvalchev
 Tags: integrate, orders, woocommerce, reviews, customer, report, order verification, negative reviews, customer check, report review, nekorekten.com
 Requires at least: 5.3
-Tested up to: 6.4
+Tested up to: 6.5
 Requires PHP: 7.4
-Stable tag: 1.3
+Stable tag: 1.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -68,6 +68,11 @@ Definitely!
 4. Report signal
 
 == Changelog ==
+
+= 1.4 =
+* **Added:** Required plugins the new option of WordPress 6.5
+* Tested with WordPress 6.5
+**Release date: April 3, 2024**
 
 = 1.3 =
 * Changed version SweetAlert2 to v11.4.8
