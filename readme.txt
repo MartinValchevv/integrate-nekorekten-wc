@@ -1,7 +1,7 @@
 === Integrate nekorekten.com for WooCommerce ===
 Contributors: martinvalchev
 Donate link: https://revolut.me/mvalchev
-Tags: integrate, orders, woocommerce, reviews, customer, report, order verification, negative reviews, customer check, report review, nekorekten.com
+Tags: order verification, negative reviews, customer check, report review, nekorekten.com
 Requires at least: 5.3
 Tested up to: 6.5
 Requires PHP: 7.4
@@ -9,7 +9,7 @@ Stable tag: 1.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Integrate nekorekten.com for WooCommerce is a plugin that helps to check your customers - whether there are negative reviews about them in the nekorekten.com system, as well as you can report incorrect customers. Everything is done to facilitate the check in the order, also there is an option to receive directly in the email about a new order, if there are negative reviews.
+Integrate nekorekten.com for WooCommerce check customers for negative reviews, facilitates order checks and provide email alerts for negative reviews.
 
 == Description ==
 
