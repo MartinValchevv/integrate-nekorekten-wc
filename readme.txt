@@ -1,7 +1,7 @@
 === Integrate nekorekten.com for WooCommerce ===
 Contributors: martinvalchev
 Donate link: https://revolut.me/mvalchev
-Tags: customer reputation verification, negative review management, order verification plugin, report incorrect customers, nekorekten
+Tags: customer, review, order, report, nekorekten
 Requires at least: 5.3
 Tested up to: 6.5
 Requires PHP: 7.4
