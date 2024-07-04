@@ -8,6 +8,7 @@
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 $option = get_option( 'inwc_settings_group' );
+use Automattic\WooCommerce\Internal\DataStores\Orders\CustomOrdersTableController;
 
 /**
  * Enqueue CSS and JS
@@ -27,15 +28,19 @@ if (isset($option['inwc_settings_turn_on']) && $option['inwc_settings_turn_on'] 
     /**
      * Add Signals from nekorekten.com meta box to WooCommerce order edit page
      *
-     * @since 1.0
+     * @since 1.5
      */
     function inwc_add_signals_meta_box_to_order_edit_page()
     {
+        $screen = class_exists( '\Automattic\WooCommerce\Internal\DataStores\Orders\CustomOrdersTableController' ) && wc_get_container()->get( CustomOrdersTableController::class )->custom_orders_table_usage_is_enabled()
+            ? wc_get_page_screen_id( 'shop-order' )
+            : 'shop_order';
+
         add_meta_box(
             'signals_meta_box',
             __('Signals from nekorekten.com', 'integrate-nekorekten-wc'),
             'inwc_render_signals_meta_box',
-            'shop_order',
+            $screen,
             'advanced',
             'high'
         );
@@ -47,25 +52,28 @@ if (isset($option['inwc_settings_turn_on']) && $option['inwc_settings_turn_on'] 
     /**
      * Render content for the Signals from nekorekten.com meta box
      *
-     * @since 1.1
+     * @since 1.5
      */
     function inwc_render_signals_meta_box($post)
     {
-
+        // Get the settings option
         $option = get_option('inwc_settings_group');
         $validPhone = false;
 
-        $order_id = $post->ID;
+        // Get the order object
+        $order = wc_get_order($post->ID);
+        if (!$order) {
+            return;
+        }
+
         $api_key = $option['inwc_settings_API_key'];
-        $firstName = get_post_meta($order_id, '_billing_first_name', true);
-        $lastName = get_post_meta($order_id, '_billing_last_name', true);
+        $firstName = $order->get_billing_first_name();
+        $lastName = $order->get_billing_last_name();
 
-
-        $phone = get_post_meta($order_id, '_billing_phone', true);
-        $email = get_post_meta($order_id, '_billing_email', true);
+        $phone = $order->get_billing_phone();
+        $email = $order->get_billing_email();
 
         $api_url = 'https://api.nekorekten.com/api/v1/reports';
-
         $restcountriesApiUrl = 'https://restcountries.com/v3.1/all?fields=idd,name';
 
         $query_args_phone = array(
@@ -80,9 +88,9 @@ if (isset($option['inwc_settings_turn_on']) && $option['inwc_settings_turn_on'] 
             'Content-Type' => 'application/json',
             'Api-Key' => $api_key
         );
+
         $responsePhone = wp_remote_get(add_query_arg($query_args_phone, $api_url), array('headers' => $headers));
         $responseEmail = wp_remote_get(add_query_arg($query_args_email, $api_url), array('headers' => $headers));
-
         $responseAllCountryCodes = wp_remote_get($restcountriesApiUrl);
 
         if (is_wp_error($responseAllCountryCodes)) {
@@ -112,36 +120,31 @@ if (isset($option['inwc_settings_turn_on']) && $option['inwc_settings_turn_on'] 
                 $cleanedNumber = preg_replace('/\D/', '', $phone);
                 // Check if the cleaned number is valid
                 if (preg_match('/^\+?\d{1,3}\d{8,15}$/', $cleanedNumber)) {
-
                     $countryCode = preg_match('/^\+?(\d{1,3})/', $cleanedNumber, $matches) ? $matches[1] : null;
 
                     if ($countryCode == $phoneCountryCode) {
                         $validPhone = true;
                         break;
                     }
-
                 } else {
                     // Invalid phone number
-                    return "Not a valid phone number";
+                    echo "Not a valid phone number";
+                    return;
                 }
-
-//            error_log( print_r( $countryName, true ) );
-//            error_log( print_r( $phoneCountryCode, true ) );
-
             }
         }
-
 
         if ((!is_wp_error($responsePhone) || !is_wp_error($responseEmail)) && (wp_remote_retrieve_response_code($responsePhone) === 200 || wp_remote_retrieve_response_code($responseEmail) === 200)) {
             $data_phone = json_decode(wp_remote_retrieve_body($responsePhone));
             $data_email = json_decode(wp_remote_retrieve_body($responseEmail));
 
-
             if (($data_email && isset($data_email->count) && $data_email->count > 0) || ($data_phone && isset($data_phone->count) && $data_phone->count > 0)) {
-                update_post_meta($order_id, 'inwc_correct_customer_status_data', 'incorrect');
+                $order->update_meta_data('inwc_correct_customer_status_data', 'incorrect');
             } else {
-                update_post_meta($order_id, 'inwc_correct_customer_status_data', 'correct');
+                $order->update_meta_data('inwc_correct_customer_status_data', 'correct');
             }
+
+            $order->save();
 
             ?>
             <div class="signal-wrapper">
@@ -374,26 +377,38 @@ if (isset($option['inwc_settings_turn_on']) && $option['inwc_settings_turn_on'] 
                     echo '<p style="margin-top: 0; padding: 20px 0 8px 0; color: red;">' . esc_html($data_email->message) . '</p>';
                 }
             } else {
-                 echo '<p style="margin-top: 0; padding: 20px 0 8px 0; color: red;">' . esc_html__('Unable to retrieve data from nekorekten.com API, check if you have configured the correct API key or wait a few minutes because you may be doing 5 requests per minute', 'integrate-nekorekten-wc') . '</p>';
+                echo '<p style="margin-top: 0; padding: 20px 0 8px 0; color: red;">' . esc_html__('Unable to retrieve data from nekorekten.com API, check if you have configured the correct API key or wait a few minutes because you may be doing 5 requests per minute', 'integrate-nekorekten-wc') . '</p>';
             }
 
         }
     }
 
+
     /**
      *  Hook the function to the WooCommerce new order action and update customer correct status
      *
-     * @since 1.0
+     * @since 1.5
      */
-    function inwc_new_order_received_update_signals_data($order_id)
-    {
+    function inwc_new_order_received_update_signals_data($order_id) {
+        // Get the order object
+        $order = wc_get_order($order_id);
+
+        if (!$order) {
+            return; // Exit if order is not found
+        }
 
         $option = get_option('inwc_settings_group');
 
+        // Ensure the API key exists
+        if (!isset($option['inwc_settings_API_key'])) {
+            return; // Exit if API key is not found
+        }
+
         $api_key = $option['inwc_settings_API_key'];
 
-        $phone = get_post_meta($order_id, '_billing_phone', true);
-        $email = get_post_meta($order_id, '_billing_email', true);
+        // Get billing phone and email from the order
+        $phone = $order->get_billing_phone();
+        $email = $order->get_billing_email();
 
         $api_url = 'https://api.nekorekten.com/api/v1/reports';
 
@@ -409,24 +424,31 @@ if (isset($option['inwc_settings_turn_on']) && $option['inwc_settings_turn_on'] 
             'Content-Type' => 'application/json',
             'Api-Key' => $api_key
         );
+
         $responsePhone = wp_remote_get(add_query_arg($query_args_phone, $api_url), array('headers' => $headers));
         $responseEmail = wp_remote_get(add_query_arg($query_args_email, $api_url), array('headers' => $headers));
 
+        // Check if responses are valid and process them
+        if ((!is_wp_error($responsePhone) && wp_remote_retrieve_response_code($responsePhone) === 200) ||
+            (!is_wp_error($responseEmail) && wp_remote_retrieve_response_code($responseEmail) === 200)) {
 
-        if ((!is_wp_error($responsePhone) || !is_wp_error($responseEmail)) && (wp_remote_retrieve_response_code($responsePhone) === 200 || wp_remote_retrieve_response_code($responseEmail) === 200)) {
             $data_phone = json_decode(wp_remote_retrieve_body($responsePhone));
             $data_email = json_decode(wp_remote_retrieve_body($responseEmail));
 
-            if (($data_email && isset($data_email->count) && $data_email->count > 0) || ($data_phone && isset($data_phone->count) && $data_phone->count > 0)) {
-                update_post_meta($order_id, 'inwc_correct_customer_status_data', 'incorrect');
+            // Check if either data set has a count greater than 0
+            if (($data_email && isset($data_email->count) && $data_email->count > 0) ||
+                ($data_phone && isset($data_phone->count) && $data_phone->count > 0)) {
+                $order->update_meta_data('inwc_correct_customer_status_data', 'incorrect');
             } else {
-                update_post_meta($order_id, 'inwc_correct_customer_status_data', 'correct');
+                $order->update_meta_data('inwc_correct_customer_status_data', 'correct');
             }
 
+            // Save the updated meta data
+            $order->save();
         }
-
     }
     add_action('woocommerce_new_order', 'inwc_new_order_received_update_signals_data');
+
 
 
     /**
@@ -497,7 +519,7 @@ if (isset($option['inwc_settings_turn_on']) && $option['inwc_settings_turn_on'] 
         /**
          * Add column after "Status" column in shop_order admin page
          *
-         * @since 1.0
+         * @since 1.5
          */
         function inwc_add_order_column($columns)
         {
@@ -515,16 +537,16 @@ if (isset($option['inwc_settings_turn_on']) && $option['inwc_settings_turn_on'] 
         }
 
         add_filter('manage_edit-shop_order_columns', 'inwc_add_order_column');
+        add_filter('manage_woocommerce_page_wc-orders_columns', 'inwc_add_order_column'); // Support HPOS functions
 
 
         /**
          * View column Correct Customer Status
          *
-         * @since 1.0
+         * @since 1.5
          */
-        function inwc_view_order_column_correct_customer_status($column)
+        function inwc_view_order_column_correct_customer_status($column, $post_id)
         {
-            global $post;
 
             if ($column === 'correct_customer_status') {
 
@@ -535,7 +557,10 @@ if (isset($option['inwc_settings_turn_on']) && $option['inwc_settings_turn_on'] 
                     ),
                 );
 
-                $correct_customer_status_data = get_post_meta($post->ID, 'inwc_correct_customer_status_data', true);
+                $order = wc_get_order($post_id);
+
+                $correct_customer_status_data = $order->get_meta('inwc_correct_customer_status_data', true);
+
                 if ($correct_customer_status_data == 'incorrect') {
                     echo wp_kses('<i class="fas fa-thumbs-down" style="color: #d63638; font-size: 20px;"></i>', $allowed_tags);
                 } else if ($correct_customer_status_data == 'correct') {
@@ -545,7 +570,9 @@ if (isset($option['inwc_settings_turn_on']) && $option['inwc_settings_turn_on'] 
             }
         }
 
-        add_action('manage_shop_order_posts_custom_column', 'inwc_view_order_column_correct_customer_status');
+        add_action('manage_shop_order_posts_custom_column', 'inwc_view_order_column_correct_customer_status', 25, 2);
+        add_action('manage_woocommerce_page_wc-orders_custom_column', 'inwc_view_order_column_correct_customer_status', 25, 2); // Support HPOS functions
+
 
     } /** END Settings show column */
 
@@ -557,22 +584,25 @@ if (isset($option['inwc_settings_turn_on']) && $option['inwc_settings_turn_on'] 
         /**
          * Add content after the order table in the new order email for admin
          *
-         * @since 1.0
+         * @since 1.5
          */
         function inwc_new_order_email_content_for_admin($order, $sent_to_admin, $plain_text, $email)
         {
-            // Check if the email is sent to the admin
+            // Check if the email is sent to the admin and if it's the 'new_order' email
             if ($sent_to_admin && $email->id === 'new_order') {
 
+                // Get the settings option
                 $option = get_option('inwc_settings_group');
-
                 $api_key = $option['inwc_settings_API_key'];
 
+                // Get the order ID and order object
                 $order_id = $order->get_id();
 
-                $phone = get_post_meta($order_id, '_billing_phone', true);
-                $email = get_post_meta($order_id, '_billing_email', true);
+                // Get billing phone and email using WooCommerce order methods
+                $phone = $order->get_billing_phone();
+                $email_address = $order->get_billing_email();
 
+                // Define the API URL and query parameters
                 $api_url = 'https://api.nekorekten.com/api/v1/reports';
 
                 $query_args_phone = array(
@@ -580,25 +610,29 @@ if (isset($option['inwc_settings_turn_on']) && $option['inwc_settings_turn_on'] 
                 );
 
                 $query_args_email = array(
-                    'email' => $email
+                    'email' => $email_address
                 );
 
+                // Define the headers for the API requests
                 $headers = array(
                     'Content-Type' => 'application/json',
                     'Api-Key' => $api_key
                 );
+
+                // Make the API requests
                 $responsePhone = wp_remote_get(add_query_arg($query_args_phone, $api_url), array('headers' => $headers));
                 $responseEmail = wp_remote_get(add_query_arg($query_args_email, $api_url), array('headers' => $headers));
 
-
+                // Check if the responses are successful
                 if ((!is_wp_error($responsePhone) || !is_wp_error($responseEmail)) && (wp_remote_retrieve_response_code($responsePhone) === 200 || wp_remote_retrieve_response_code($responseEmail) === 200)) {
                     $data_phone = json_decode(wp_remote_retrieve_body($responsePhone));
                     $data_email = json_decode(wp_remote_retrieve_body($responseEmail));
 
                     echo '<h3 style="text-align: center;">' . esc_html__('Information from nekorekten.com', 'integrate-nekorekten-wc') . '</h3>';
 
+                    // Display results by email
                     if ($data_email && isset($data_email->items) && !empty($data_email->items)) {
-                        echo '<p style="text-align: center;">' . esc_html__('Results by email:', 'integrate-nekorekten-wc') . ' <b style="color: #d63638">' . esc_attr($email) . '</b></p>';
+                        echo '<p style="text-align: center;">' . esc_html__('Results by email:', 'integrate-nekorekten-wc') . ' <b style="color: #d63638">' . esc_attr($email_address) . '</b></p>';
                         foreach ($data_email->items as $signal) {
                             echo '<p style="margin: 16px 0 0;">' . esc_html($signal->firstName) . ' ' . esc_html($signal->lastName) . '</p>';
                             echo '<p style="margin: 0;">' . esc_html($signal->email) . '</p>';
@@ -608,6 +642,7 @@ if (isset($option['inwc_settings_turn_on']) && $option['inwc_settings_turn_on'] 
                         }
                     }
 
+                    // Display results by phone
                     if ($data_phone && isset($data_phone->items) && !empty($data_phone->items)) {
                         echo '<p style="text-align: center;">' . esc_html__('Results by phone:', 'integrate-nekorekten-wc') . ' <b style="color: #d63638">' . esc_attr($phone) . '</b></p>';
                         foreach ($data_phone->items as $signal) {
@@ -619,10 +654,9 @@ if (isset($option['inwc_settings_turn_on']) && $option['inwc_settings_turn_on'] 
                         }
                     }
 
+                    // Provide a link to view more details in the admin order page
                     echo '<p style="text-align: center;"><a href="' . esc_url(admin_url('post.php?post=' . $order_id . '&action=edit')) . '" style="display: inline-block; background-color: #d63638; color: #fff; padding: 8px 16px; text-decoration: none; border-radius: 4px;" target="_blank">' . esc_html__('See more', 'integrate-nekorekten-wc') . '</a></p>';
-
                 }
-
             }
         }
 

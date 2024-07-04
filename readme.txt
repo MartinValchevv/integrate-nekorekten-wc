@@ -1,11 +1,11 @@
 === Integrate nekorekten.com for WooCommerce ===
 Contributors: martinvalchev
 Donate link: https://revolut.me/mvalchev
-Tags: order verification, negative reviews, customer check, report review, nekorekten.com
+Tags: customer reputation verification, negative review management, order verification plugin, report incorrect customers, nekorekten
 Requires at least: 5.3
 Tested up to: 6.5
 Requires PHP: 7.4
-Stable tag: 1.4
+Stable tag: 1.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -59,6 +59,8 @@ Yes, Integrate nekorekten.com for WooCommerce encourages active participation in
 Absolutely! The plugin offers real-time email notifications, promptly updating merchants about new orders with negative reviews. This feature allows for proactive responses and ensures high customer satisfaction.
 = Is Integrate nekorekten.com for WooCommerce beneficial for my business ? =
 Definitely!
+= Does Integrate nekorekten.com for WooCommerce support WooCommerce HPOS ? =
+Yes, Integrate nekorekten.com for WooCommerce fully supports WooCommerce High-Performance Order Storage (HPOS). The plugin has been optimized to work seamlessly with the new HPOS system.
 
 == Screenshots ==
 
@@ -68,6 +70,10 @@ Definitely!
 4. Report signal
 
 == Changelog ==
+
+= 1.5 =
+* **Added:** Full support HPOS
+**Release date: July 4, 2024**
 
 = 1.4 =
 * **Added:** Required plugins the new option of WordPress 6.5
@@ -88,6 +94,9 @@ Definitely!
 * First release of the plugin.
 
 == Upgrade Notice ==
+
+= 1.5 =
+* **Added:** Full support HPOS
 
 = 1.1 =
 * Added function to show server ip with direct copy option to use for API key configuration in nekorekten.com

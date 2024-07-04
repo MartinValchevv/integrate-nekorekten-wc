@@ -11,12 +11,12 @@ if ( ! defined('ABSPATH') ) exit;
 /**
  * Enqueue Admin CSS and JS
  *
- * @since 1.1
+ * @since 1.5
  */
 function inwc_enqueue_css_js( $hook ) {
 
 
-	if ( $hook != "woocommerce_page_wc-settings" && $hook != "post.php" && $hook != "edit.php" ) {
+	if ( $hook != "woocommerce_page_wc-settings" && $hook !== 'woocommerce_page_wc-orders' && $hook != "post.php" && $hook != "edit.php" ) {
 		return;
 	}
 
