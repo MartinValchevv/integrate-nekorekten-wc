@@ -6,7 +6,7 @@
  * Author: Martin Valchev
  * Author URI: https://martinvalchev.com/
  * Requires Plugins: woocommerce
- * Version: 1.5
+ * Version: 1.6
  * Text Domain: integrate-nekorekten-wc
  * Domain Path: /languages
  * License: GPL v2 - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
@@ -84,9 +84,9 @@ add_action( 'admin_init', 'inwc_upgrader' );
 /**
  * Admin notice err
  *
- * @since 1.0
+ * @since 1.6
  */
-function inwc_admin_notice_err($msg) {
+function inwc_admin_notice_err($msg = '') {
     if (!empty($msg)) :
         ?>
         <div class="notice notice-error is-dismissible">

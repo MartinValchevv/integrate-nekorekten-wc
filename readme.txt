@@ -3,9 +3,9 @@ Contributors: martinvalchev
 Donate link: https://revolut.me/mvalchev
 Tags: customer, review, order, report, nekorekten
 Requires at least: 5.3
-Tested up to: 6.5
+Tested up to: 6.6.1
 Requires PHP: 7.4
-Stable tag: 1.5
+Stable tag: 1.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -70,6 +70,11 @@ Yes, Integrate nekorekten.com for WooCommerce fully supports WooCommerce High-Pe
 4. Report signal
 
 == Changelog ==
+
+= 1.6 =
+* **Fix:** Fatal Error with admin notices
+* Tested with WordPress 6.6.1
+**Release date: July 26, 2024**
 
 = 1.5 =
 * **Added:** Full support HPOS
