@@ -115,7 +115,7 @@ function inwc_custom_settings() {
 
 /**
  * Plugin info view
- * @since 1.0
+ * @since 1.7
  */
 function inwc_plugin_info() {
     $allowed_tags = array(
@@ -126,7 +126,7 @@ function inwc_plugin_info() {
         'br' => array(),
     );
     $inwc_footer_text = sprintf( __( 'If you like this plugin, please <a href="%s" target="_blank">make a donation</a> or leave me a <a href="%s" target="_blank">&#9733;&#9733;&#9733;&#9733;&#9733;</a> rating to support continued development. Thanks a bunch!', 'integrate-nekorekten-wc' ),
-        esc_url('https://revolut.me/mvalchev'),
+        esc_url('https://linktr.ee/martinvalchev'),
         esc_url('https://wordpress.org/support/plugin/integrate-nekorekten-wc/reviews/?rate=5#new-post')
     );
     $inwc_support_links = sprintf( __( '<a href="%s" target="_blank">Get support</a>', 'integrate-nekorekten-wc' ),

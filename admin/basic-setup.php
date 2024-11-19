@@ -57,12 +57,12 @@ add_filter( 'plugin_action_links_' . INWC_PLUGIN . '/integrate-nekorekten-wc.php
 /**
  * Add donate and other links to plugins list
  *
- * @since 1.0
+ * @since 1.7
  */
 function inwc_plugin_row_meta( $links, $file ) {
 	if ( strpos( $file, 'integrate-nekorekten-wc.php' ) !== false ) {
 		$new_links = array(
-				'donate' 	=> '<a href="https://revolut.me/mvalchev" target="_blank">Donate</a>',
+				'donate' 	=> '<a href="https://linktr.ee/martinvalchev" target="_blank">Donate</a>',
 				'hireme' 	=> '<a href="https://martinvalchev.com/#contact" target="_blank">Hire Me For A Project</a>',
 				);
 		$links = array_merge( $links, $new_links );
