@@ -6,7 +6,7 @@
  * Author: Martin Valchev
  * Author URI: https://linktr.ee/martinvalchev
  * Requires Plugins: woocommerce
- * Version: 1.7
+ * Version: 1.8
  * Text Domain: integrate-nekorekten-wc
  * Domain Path: /languages
  * License: GPL v2 - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
@@ -21,7 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  *
  * @since 1.0
  */
-if ( ! defined( 'INWC_VERSION_NUM' ) ) 		    define( 'INWC_VERSION_NUM'		    , '1.7' ); // Plugin version constant
+if ( ! defined( 'INWC_VERSION_NUM' ) ) 		    define( 'INWC_VERSION_NUM'		    , '1.8' ); // Plugin version constant
 if ( ! defined( 'INWC_PLUGIN' ) )		define( 'INWC_PLUGIN'		, trim( dirname( plugin_basename( __FILE__ ) ), '/' ) ); // Name of the plugin folder eg - 'integrate-nekorekten-wc'
 if ( ! defined( 'INWC_DIR' ) )	define( 'INWC_DIR'	, plugin_dir_path( __FILE__ ) ); // Plugin directory absolute path with the trailing slash. Useful for using with includes eg - /var/www/html/wp-content/plugins/integrate-nekorekten-wc/
 if ( ! defined( 'INWC_URL' ) )	define( 'INWC_URL'	, plugin_dir_url( __FILE__ ) ); // URL to the plugin folder with the trailing slash. Useful for referencing src eg - http://localhost/wp/wp-content/plugins/integrate-nekorekten-wc/

@@ -1,6 +1,6 @@
 jQuery(document).ready(function($) {
 
-    /** @since 1.0 Functions for report signal  */
+    /** @since 1.8 Functions for report signal  */
     $('#signals_meta_box #btn-report').click(function(e) {
         e.preventDefault();
         $('html, body').css('overflow', 'hidden');
@@ -37,7 +37,7 @@ jQuery(document).ready(function($) {
     });
 
     $(document).click(function(e) {
-        if (!$(e.target).closest('#signals_meta_box #report-popup').length && !$(e.target).is('#btn-report')) {
+        if ($(e.target).is('#report-overlay')) {
             $('html, body').css('overflow', 'auto');
             $('#signals_meta_box #report-overlay').fadeOut();
             $('#signals_meta_box #report-popup').fadeOut(200);
