@@ -3,7 +3,7 @@ Contributors: martinvalchev
 Donate link: https://linktr.ee/martinvalchev
 Tags: customer, review, order, report, nekorekten
 Requires at least: 5.3
-Tested up to: 6.7.1
+Tested up to: 6.8
 Requires PHP: 7.4
 Stable tag: 1.8
 License: GPLv2 or later
